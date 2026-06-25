@@ -4,14 +4,14 @@ type: "feature"
 interface_type: "m2m"
 generation_mode: "subagent"
 spec_source: "RFC 9179"
-issue_id: null
+issue_id: 4
 labels: ["feature", "geo-location"]
 ---
 
 # Feature: Record Cartesian Coordinates for Geographic Location
 
 ## Parent Epic
-- [ ] #TBD - Geographic Location: YANG Geo-Location Grouping (docs/epics/epic-01-geo-location.md) (parent module container that owns the location choice — cartesian case)
+- [ ] #7 - Geographic Location: YANG Geo-Location Grouping(https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/epics/epic-01-geo-location.md) (parent module container that owns the location choice — cartesian case)
 
 ## Description
 

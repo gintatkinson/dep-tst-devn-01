@@ -4,14 +4,14 @@ type: "feature"
 interface_type: "m2m"
 generation_mode: "subagent"
 spec_source: "RFC 9179"
-issue_id: null
+issue_id: 6
 labels: ["feature", "geo-location"]
 ---
 
 # Feature: Track Location Timestamp and Validity Expiration
 
 ## Parent Epic
-- [ ] #TBD - Geographic Location: YANG Geo-Location Grouping (docs/epics/epic-01-geo-location.md) (parent module container that owns timestamp and valid-until leaf nodes)
+- [ ] #7 - Geographic Location: YANG Geo-Location Grouping(https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/epics/epic-01-geo-location.md) (parent module container that owns timestamp and valid-until leaf nodes)
 
 ## Description
 
