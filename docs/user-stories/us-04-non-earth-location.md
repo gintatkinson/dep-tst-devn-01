@@ -3,7 +3,7 @@ title: "Specify Geographic Location on Non-Earth Astronomical Body"
 type: "user-story"
 generation_mode: "subagent"
 spec_source: "RFC 9179"
-issue_id: null
+issue_id: 11
 labels: ["user-story", "geo-location"]
 ---
 

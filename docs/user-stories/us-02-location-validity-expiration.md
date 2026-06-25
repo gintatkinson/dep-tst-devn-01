@@ -3,7 +3,7 @@ title: "Handle Location Data Validity Expiration"
 type: "user-story"
 generation_mode: "subagent"
 spec_source: "RFC 9179"
-issue_id: null
+issue_id: 9
 labels: ["user-story", "geo-location"]
 ---
 
