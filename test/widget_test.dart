@@ -1,6 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_flutter/main.dart';
 import 'package:app_flutter/domain/repository.dart';
+import 'package:app_flutter/domain/geodetic_system.dart';
+import 'package:app_flutter/bloc/geodetic_system_bloc.dart';
+import 'package:app_flutter/persistence/geodetic_system_adapter.dart';
+
+class MockGeodeticRepo implements IGeodeticSystemRepository {
+  @override
+  Future<GeodeticSystem?> fetchGeodeticSystem(String nodeId) async => null;
+  @override
+  Future<void> saveGeodeticSystem(String nodeId, GeodeticSystem system) async {}
+}
 
 class MockRepository implements AbstractRepository {
   @override
@@ -14,7 +24,10 @@ class MockRepository implements AbstractRepository {
 void main() {
   testWidgets('Dashboard console boots and renders main widgets successfully', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(repository: MockRepository()));
+    await tester.pumpWidget(MyApp(
+      repository: MockRepository(),
+      geodeticSystemBloc: GeodeticSystemBloc(repository: MockGeodeticRepo()),
+    ));
 
     // Allow FutureBuilder to resolve the asset loading future
     await tester.pumpAndSettle();

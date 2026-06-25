@@ -10,6 +10,8 @@ import 'package:app_flutter/domain/repository.dart';
 import 'package:app_flutter/components/property_grid.dart';
 import 'package:app_flutter/domain/schema.dart';
 import 'package:app_flutter/main.dart' show repository;
+import 'package:app_flutter/bloc/geodetic_system_bloc.dart';
+import 'package:app_flutter/domain/geodetic_system.dart';
 
 /// TreeNode representing hierarchy selector items
 class TreeNode {
@@ -54,6 +56,7 @@ class Layout extends StatefulWidget {
   final String? themeMode;
   final ValueChanged<String>? onThemeModeChange;
   final AbstractRepository? repository;
+  final GeodeticSystemBloc? geodeticSystemBloc;
 
   const Layout({
     super.key,
@@ -64,6 +67,7 @@ class Layout extends StatefulWidget {
     this.themeMode,
     this.onThemeModeChange,
     this.repository,
+    this.geodeticSystemBloc,
   });
 
   @override
@@ -105,6 +109,8 @@ class _LayoutState extends State<Layout> {
   // Properties Reactive State
   Map<String, dynamic>? _currentNodeData;
   StreamSubscription<Map<String, dynamic>>? _propertiesSubscription;
+  GeodeticSystemBloc? get _gsBloc => widget.geodeticSystemBloc;
+  StreamSubscription<GeodeticSystemState>? _gsSubscription;
 
   void _subscribeToProperties(String nodeId) {
     _propertiesSubscription?.cancel();
@@ -123,6 +129,19 @@ class _LayoutState extends State<Layout> {
     });
   }
 
+  void _subscribeToGeodeticSystem() {
+    _gsSubscription?.cancel();
+    final bloc = _gsBloc;
+    if (bloc == null) return;
+    _gsSubscription = bloc.stream.listen((state) {
+      if (mounted) setState(() {});
+    });
+    bloc.load(_currentView);
+  }
+
+  bool _isGeodeticKey(String key) =>
+      key == 'geodetic-datum' || key == 'coord-accuracy' || key == 'height-accuracy';
+
   @override
   void initState() {
     super.initState();
@@ -134,6 +153,7 @@ class _LayoutState extends State<Layout> {
     _loadLayoutConfig();
     _expandParents(_currentView);
     _subscribeToProperties(_currentView);
+    _subscribeToGeodeticSystem();
 
     // Initialize simulated periodic off-thread background worker
     _periodicTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
@@ -151,6 +171,7 @@ class _LayoutState extends State<Layout> {
       });
       _expandParents(_currentView);
       _subscribeToProperties(_currentView);
+      _subscribeToGeodeticSystem();
     }
     if (widget.themeMode != null && widget.themeMode != oldWidget.themeMode) {
       setState(() {
@@ -162,6 +183,7 @@ class _LayoutState extends State<Layout> {
   @override
   void dispose() {
     _propertiesSubscription?.cancel();
+    _gsSubscription?.cancel();
     _periodicTimer?.cancel();
     _treeFocusNode.dispose();
     _tableVerticalController.dispose();
@@ -1109,12 +1131,51 @@ class _LayoutState extends State<Layout> {
         }
       }
 
+      var resolvedAttributes = List<AttributeDefinition>.from(
+        dynamicAttributes ?? child.attributes ?? defaultCoordinateAttributes,
+      );
+      resolvedAttributes.addAll(defaultGeodeticAttributes);
+
+      var initialData = Map<String, dynamic>.from(_currentNodeData ?? {});
+      if (!initialData.containsKey('geodetic-datum')) {
+        initialData['geodetic-datum'] = 'wgs-84';
+      }
+      final gsBloc = _gsBloc;
+      if (gsBloc != null && gsBloc.state is GeodeticSystemLoaded) {
+        final gs = (gsBloc.state as GeodeticSystemLoaded).system;
+        initialData['geodetic-datum'] = gs.geodeticDatum;
+        if (gs.coordAccuracy != null) initialData['coord-accuracy'] = gs.coordAccuracy;
+        if (gs.heightAccuracy != null) initialData['height-accuracy'] = gs.heightAccuracy;
+      }
+
       return PropertyGrid(
         key: child.key,
         activeView: _currentView,
-        attributes: dynamicAttributes ?? child.attributes,
-        initialValues: _currentNodeData ?? {},
+        attributes: resolvedAttributes,
+        initialValues: initialData,
         onSave: (String key, dynamic value) async {
+          if (gsBloc != null && _isGeodeticKey(key)) {
+            final currentState = gsBloc.state;
+            String datum;
+            double? coordAcc;
+            double? heightAcc;
+            if (currentState is GeodeticSystemLoaded) {
+              datum = currentState.system.geodeticDatum;
+              coordAcc = currentState.system.coordAccuracy;
+              heightAcc = currentState.system.heightAccuracy;
+            } else {
+              datum = 'wgs-84';
+            }
+            if (key == 'geodetic-datum') datum = value as String;
+            else if (key == 'coord-accuracy') coordAcc = (value as num).toDouble();
+            else if (key == 'height-accuracy') heightAcc = (value as num).toDouble();
+            await gsBloc.save(_currentView, GeodeticSystem(
+              geodeticDatum: datum,
+              coordAccuracy: coordAcc,
+              heightAccuracy: heightAcc,
+            ));
+            return;
+          }
           AbstractRepository resolvedRepo;
           try {
             resolvedRepo = widget.repository ?? repository;

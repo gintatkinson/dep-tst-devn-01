@@ -5,6 +5,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:app_flutter/domain/repository.dart';
+import 'package:app_flutter/bloc/geodetic_system_bloc.dart';
+import 'package:app_flutter/persistence/geodetic_system_adapter.dart';
 import 'package:app_flutter/components/layout.dart';
 import 'package:app_flutter/components/property_grid.dart';
 
@@ -54,13 +56,29 @@ Future<void> main() async {
 
   repository = SqliteRepositoryAdapter(db);
 
-  runApp(MyApp(repository: repository));
+  await db.execute('''
+    CREATE TABLE IF NOT EXISTS geodetic_system (
+      node_id TEXT PRIMARY KEY,
+      geodetic_datum TEXT NOT NULL,
+      coord_accuracy REAL,
+      height_accuracy REAL
+    )
+  ''');
+  final gsAdapter = SqliteGeodeticSystemAdapter(db);
+  await gsAdapter.init();
+  final geodeticSystemBloc = GeodeticSystemBloc(repository: gsAdapter);
+
+  runApp(MyApp(
+    repository: repository,
+    geodeticSystemBloc: geodeticSystemBloc,
+  ));
 }
 
 /// MyApp is the root application widget that initializes the application theme and layout configurations.
 class MyApp extends StatefulWidget {
   final AbstractRepository repository;
-  const MyApp({super.key, required this.repository});
+  final GeodeticSystemBloc geodeticSystemBloc;
+  const MyApp({super.key, required this.repository, required this.geodeticSystemBloc});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -117,6 +135,7 @@ class _MyAppState extends State<MyApp> {
         themeMode: _themeMode,
         onThemeModeChange: _updateThemeMode,
         repository: widget.repository,
+        geodeticSystemBloc: widget.geodeticSystemBloc,
       ),
     );
   }
@@ -127,12 +146,14 @@ class DashboardPage extends StatefulWidget {
   final ThemeMode themeMode;
   final ValueChanged<String> onThemeModeChange;
   final AbstractRepository repository;
+  final GeodeticSystemBloc geodeticSystemBloc;
 
   const DashboardPage({
     super.key,
     required this.themeMode,
     required this.onThemeModeChange,
     required this.repository,
+    required this.geodeticSystemBloc,
   });
 
   @override
@@ -198,6 +219,7 @@ class _DashboardPageState extends State<DashboardPage> {
           themeMode: _getThemeModeString(),
           onThemeModeChange: widget.onThemeModeChange,
           repository: widget.repository,
+          geodeticSystemBloc: widget.geodeticSystemBloc,
           child: PropertyGrid(
             activeView: _activeView,
             initialValues: const {},

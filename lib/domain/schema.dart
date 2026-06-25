@@ -109,3 +109,27 @@ const List<AttributeDefinition> defaultCoordinateAttributes = [
     isRequired: false,
   ),
 ];
+
+const List<AttributeDefinition> defaultGeodeticAttributes = [
+  AttributeDefinition(
+    key: 'geodetic-datum',
+    label: 'Geodetic Datum',
+    type: 'string',
+    sectionGroup: 'Location',
+    regexPattern: r'^[ -@\[-~]*$',
+  ),
+  AttributeDefinition(
+    key: 'coord-accuracy',
+    label: 'Coord Accuracy',
+    type: 'double',
+    sectionGroup: 'Location',
+    minValue: 0,
+  ),
+  AttributeDefinition(
+    key: 'height-accuracy',
+    label: 'Height Accuracy',
+    type: 'double',
+    sectionGroup: 'Location',
+    minValue: 0,
+  ),
+];
