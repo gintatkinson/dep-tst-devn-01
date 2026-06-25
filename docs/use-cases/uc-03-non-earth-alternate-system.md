@@ -3,7 +3,7 @@ title: "Configure Location for Non-Earth or Alternate-System Deployment"
 type: "use-case"
 generation_mode: "subagent"
 spec_source: "RFC 9179"
-issue_id: null
+issue_id: 14
 labels: ["use-case", "geo-location"]
 ---
 

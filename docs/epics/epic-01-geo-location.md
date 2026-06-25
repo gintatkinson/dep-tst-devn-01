@@ -27,10 +27,15 @@ The grouping is designed for use in other YANG data models — it does not defin
 ### Associated Use Cases & User Stories
 
 #### Associated Use Cases
-- [ ] TBD (populated after Phase 3 — Use Case engineering)
+- [ ] #12 - [Record and Query a Geographic Location](https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/use-cases/uc-01-record-query-location.md) (core system interaction for storing and retrieving geo-location data)
+- [ ] #13 - [Track a Moving Object's Location and Velocity Over Time](https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/use-cases/uc-02-track-moving-object.md) (motion tracking via velocity vector, timestamp, and valid-until)
+- [ ] #14 - [Configure Location for Non-Earth or Alternate-System Deployment](https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/use-cases/uc-03-non-earth-alternate-system.md) (non-Earth astronomical body and alternate-systems feature configuration)
 
 #### Associated User Stories
-- [ ] TBD (populated after Phase 2 — User Story engineering)
+- [ ] #8 - [Derive 2D Speed and Heading from Velocity Vector](https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/user-stories/us-01-derive-speed-heading.md) (algorithmic derivation of speed and heading from v-north and v-east)
+- [ ] #9 - [Handle Location Data Validity Expiration](https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/user-stories/us-02-location-validity-expiration.md) (temporal lifecycle: valid-until expiration and data currency)
+- [ ] #10 - [Inherit Reference Frame in Nested Location Contexts](https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/user-stories/us-03-nested-location-inheritance.md) (nested location reference-frame inheritance pattern)
+- [ ] #11 - [Specify Geographic Location on Non-Earth Astronomical Body](https://github.com/gintatkinson/dep-tst-devn-01/blob/main/docs/user-stories/us-04-non-earth-location.md) (non-Earth body location configuration with appropriate geodetic datum)
 
 ## 3. Architecture and System Interaction Diagrams
 

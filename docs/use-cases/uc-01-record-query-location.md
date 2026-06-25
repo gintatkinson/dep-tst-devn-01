@@ -3,7 +3,7 @@ title: "Record and Query a Geographic Location"
 type: "use-case"
 generation_mode: "subagent"
 spec_source: "RFC 9179"
-issue_id: null
+issue_id: 12
 labels: ["use-case", "geo-location"]
 ---
 

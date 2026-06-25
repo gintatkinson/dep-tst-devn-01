@@ -3,7 +3,7 @@ title: "Track a Moving Object's Location and Velocity Over Time"
 type: "use-case"
 generation_mode: "subagent"
 spec_source: "RFC 9179"
-issue_id: null
+issue_id: 13
 labels: ["use-case", "geo-location"]
 ---
 
