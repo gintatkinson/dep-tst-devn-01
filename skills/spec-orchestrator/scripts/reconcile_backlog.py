@@ -436,11 +436,12 @@ def reconcile_epic_checklists(filepath, child_features, child_stories, child_use
             indent = m.group(1)
             break
 
-    upstream_repo = rules.get("meta", {}).get("upstream_repository", "gintatkinson/digital-pipeline-repo")
+    workspace_root = find_workspace_dir(filepath)
+    git_repo = get_upstream_repo_from_git(workspace_root)
+    upstream_repo = git_repo or rules.get("meta", {}).get("upstream_repository", "gintatkinson/digital-pipeline-repo")
     repo_base = upstream_repo
     if not repo_base.startswith("http"):
         repo_base = f"https://github.com/{repo_base}"
-    workspace_root = find_workspace_dir(filepath)
     branch_name = get_current_branch(workspace_root)
     
     def format_item(item_type, filename, title, issue_num):
@@ -540,6 +541,26 @@ def reconcile_epic_checklists(filepath, child_features, child_stories, child_use
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(new_content)
         print(f"  [Reconcile Checklist] Updated checklists in {os.path.basename(filepath)}")
+
+def get_upstream_repo_from_git(workspace_root):
+    try:
+        res = subprocess.run(
+            ["git", "remote", "get-url", "origin"],
+            cwd=workspace_root, capture_output=True, text=True
+        )
+        if res.returncode == 0 and res.stdout.strip():
+            url = res.stdout.strip().rstrip(".git")
+            if "github.com" in url:
+                after_host = url.split("github.com/")[-1]
+                if after_host == url:
+                    after_host = url.split("github.com:")[-1]
+                parts = after_host.strip("/").split("/")
+                if len(parts) >= 2:
+                    return f"{parts[0]}/{parts[1]}"
+            return url
+    except Exception:
+        pass
+    return None
 
 def find_workspace_dir(start_path):
     curr = os.path.abspath(start_path)
