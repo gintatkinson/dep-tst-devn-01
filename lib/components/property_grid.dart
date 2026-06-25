@@ -85,7 +85,7 @@ class _PropertyGridState extends State<PropertyGrid> {
       _focusNodes[attr.key] = focusNode;
       _hadFocus[attr.key] = false;
 
-      if (attr.type != 'enum') {
+      if (attr.type != 'enum' && attr.type != 'enumeration') {
         focusNode.addListener(() {
           final bool currentlyHasFocus = focusNode.hasFocus;
           final bool previouslyHadFocus = _hadFocus[attr.key] ?? false;
@@ -547,11 +547,12 @@ class _PropertyGridState extends State<PropertyGrid> {
   }
 
   Widget _buildAttrField(AttributeDefinition attr, bool isDark) {
-    if (attr.type == 'enum') {
+    if (attr.type == 'enum' || attr.type == 'enumeration') {
       final options = attr.options ?? const [];
       final currentValue = committedData[attr.key] ?? (options.isNotEmpty ? options.first : '');
 
       return _buildDropdownField(
+        attrKey: attr.key,
         label: attr.label,
         focusNode: _focusNodes[attr.key]!,
         value: currentValue as String,
@@ -681,6 +682,7 @@ class _PropertyGridState extends State<PropertyGrid> {
   }
 
   Widget _buildDropdownField({
+    required String attrKey,
     required String label,
     required FocusNode focusNode,
     required String value,
@@ -705,8 +707,8 @@ class _PropertyGridState extends State<PropertyGrid> {
           focusNode: focusNode,
           onFocusChange: (bool hasFocus) {
             if (!hasFocus) {
-              final attr = _resolvedAttributes.firstWhere((a) => a.key == 'locationType');
-              _triggerBlurSave('locationType', attr);
+              final attr = _resolvedAttributes.firstWhere((a) => a.key == attrKey);
+              _triggerBlurSave(attrKey, attr);
             }
           },
           child: DropdownButtonFormField<String>(

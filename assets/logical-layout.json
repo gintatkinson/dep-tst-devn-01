@@ -167,6 +167,21 @@
         "UP",
         "DOWN"
       ]
+    },
+    {
+      "key": "geo-location/reference-frame/astronomical-body",
+      "label": "Astronomical Body",
+      "type": "string",
+      "sectionGroup": "reference-frame",
+      "isRequired": false,
+      "defaultValue": "earth"
+    },
+    {
+      "key": "geo-location/reference-frame/alternate-system",
+      "label": "Alternate System",
+      "type": "string",
+      "sectionGroup": "reference-frame",
+      "isRequired": false
     }
   ]
 }
