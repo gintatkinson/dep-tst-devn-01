@@ -7,6 +7,8 @@ import 'package:path/path.dart' as p;
 import 'package:app_flutter/domain/repository.dart';
 import 'package:app_flutter/bloc/geodetic_system_bloc.dart';
 import 'package:app_flutter/persistence/geodetic_system_adapter.dart';
+import 'package:app_flutter/bloc/ellipsoidal_coordinates_bloc.dart';
+import 'package:app_flutter/persistence/ellipsoidal_coordinates_adapter.dart';
 import 'package:app_flutter/components/layout.dart';
 import 'package:app_flutter/components/property_grid.dart';
 
@@ -36,9 +38,6 @@ Future<void> main() async {
   final int count = countResult.first['count'] as int? ?? 0;
   if (count == 0) {
     final defaultMap = {
-      "latitude": 37.7749,
-      "longitude": -122.4194,
-      "altitude": 10.0,
       "roomName": "Main-Data-Room",
       "gridRow": 12,
       "gridColumn": 4,
@@ -68,9 +67,14 @@ Future<void> main() async {
   await gsAdapter.init();
   final geodeticSystemBloc = GeodeticSystemBloc(repository: gsAdapter);
 
+  final esAdapter = SqliteEllipsoidalCoordinatesAdapter(db);
+  await esAdapter.init();
+  final ellipsoidalCoordinatesBloc = EllipsoidalCoordinatesBloc(repository: esAdapter);
+
   runApp(MyApp(
     repository: repository,
     geodeticSystemBloc: geodeticSystemBloc,
+    ellipsoidalCoordinatesBloc: ellipsoidalCoordinatesBloc,
   ));
 }
 
@@ -78,7 +82,8 @@ Future<void> main() async {
 class MyApp extends StatefulWidget {
   final AbstractRepository repository;
   final GeodeticSystemBloc geodeticSystemBloc;
-  const MyApp({super.key, required this.repository, required this.geodeticSystemBloc});
+  final EllipsoidalCoordinatesBloc ellipsoidalCoordinatesBloc;
+  const MyApp({super.key, required this.repository, required this.geodeticSystemBloc, required this.ellipsoidalCoordinatesBloc});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -136,6 +141,7 @@ class _MyAppState extends State<MyApp> {
         onThemeModeChange: _updateThemeMode,
         repository: widget.repository,
         geodeticSystemBloc: widget.geodeticSystemBloc,
+        ellipsoidalCoordinatesBloc: widget.ellipsoidalCoordinatesBloc,
       ),
     );
   }
@@ -147,6 +153,7 @@ class DashboardPage extends StatefulWidget {
   final ValueChanged<String> onThemeModeChange;
   final AbstractRepository repository;
   final GeodeticSystemBloc geodeticSystemBloc;
+  final EllipsoidalCoordinatesBloc ellipsoidalCoordinatesBloc;
 
   const DashboardPage({
     super.key,
@@ -154,6 +161,7 @@ class DashboardPage extends StatefulWidget {
     required this.onThemeModeChange,
     required this.repository,
     required this.geodeticSystemBloc,
+    required this.ellipsoidalCoordinatesBloc,
   });
 
   @override
@@ -220,6 +228,7 @@ class _DashboardPageState extends State<DashboardPage> {
           onThemeModeChange: widget.onThemeModeChange,
           repository: widget.repository,
           geodeticSystemBloc: widget.geodeticSystemBloc,
+          ellipsoidalCoordinatesBloc: widget.ellipsoidalCoordinatesBloc,
           child: PropertyGrid(
             activeView: _activeView,
             initialValues: const {},

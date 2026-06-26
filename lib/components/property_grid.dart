@@ -60,9 +60,6 @@ class _PropertyGridState extends State<PropertyGrid> {
     super.initState();
     _resolvedAttributes = widget.attributes ?? defaultCoordinateAttributes;
     committedData = Map<String, dynamic>.from(widget.initialValues.isEmpty ? {
-      'latitude': 37.7749,
-      'longitude': -122.4194,
-      'altitude': 10,
       'roomName': 'Main-Data-Room',
       'gridRow': 12,
       'gridColumn': 4,
@@ -138,8 +135,7 @@ class _PropertyGridState extends State<PropertyGrid> {
         committedData = Map<String, dynamic>.from(widget.initialValues.isEmpty ? {
           'latitude': 37.7749,
           'longitude': -122.4194,
-          'altitude': 10,
-          'roomName': 'Main-Data-Room',
+              'roomName': 'Main-Data-Room',
           'gridRow': 12,
           'gridColumn': 4,
           'maxVoltage': 240.0,

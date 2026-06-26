@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_flutter/components/property_grid.dart';
+import 'package:app_flutter/domain/schema.dart';
 
 void main() {
   /// Helper finder to locate a TextField by its preceding label text.
@@ -46,9 +47,15 @@ void main() {
 
   testWidgets('Highlights Geodetic Coordinate Frame section when activeView is Location', (WidgetTester tester) async {
     await tester.pumpWidget(
-      const MaterialApp(
+      MaterialApp(
         home: Scaffold(
-          body: PropertyGrid(activeView: 'Location'),
+          body: PropertyGrid(
+            activeView: 'Location',
+            attributes: const [
+              AttributeDefinition(key: 'test-loc', label: 'Test Loc', type: 'string', sectionGroup: 'Location'),
+              AttributeDefinition(key: 'test-alt', label: 'Test Alt', type: 'string', sectionGroup: 'Alternate'),
+            ],
+          ),
         ),
       ),
     );
@@ -65,9 +72,15 @@ void main() {
 
   testWidgets('Highlights Alternate Structural Grid Frame section when activeView is not Location/Ingestion', (WidgetTester tester) async {
     await tester.pumpWidget(
-      const MaterialApp(
+      MaterialApp(
         home: Scaffold(
-          body: PropertyGrid(activeView: 'Metrics'),
+          body: PropertyGrid(
+            activeView: 'Metrics',
+            attributes: const [
+              AttributeDefinition(key: 'test-loc', label: 'Test Loc', type: 'string', sectionGroup: 'Location'),
+              AttributeDefinition(key: 'test-alt', label: 'Test Alt', type: 'string', sectionGroup: 'Alternate'),
+            ],
+          ),
         ),
       ),
     );

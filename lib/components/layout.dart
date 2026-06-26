@@ -12,6 +12,8 @@ import 'package:app_flutter/domain/schema.dart';
 import 'package:app_flutter/main.dart' show repository;
 import 'package:app_flutter/bloc/geodetic_system_bloc.dart';
 import 'package:app_flutter/domain/geodetic_system.dart';
+import 'package:app_flutter/bloc/ellipsoidal_coordinates_bloc.dart';
+import 'package:app_flutter/domain/ellipsoidal_coordinates.dart';
 
 /// TreeNode representing hierarchy selector items
 class TreeNode {
@@ -57,6 +59,7 @@ class Layout extends StatefulWidget {
   final ValueChanged<String>? onThemeModeChange;
   final AbstractRepository? repository;
   final GeodeticSystemBloc? geodeticSystemBloc;
+  final EllipsoidalCoordinatesBloc? ellipsoidalCoordinatesBloc;
 
   const Layout({
     super.key,
@@ -68,6 +71,7 @@ class Layout extends StatefulWidget {
     this.onThemeModeChange,
     this.repository,
     this.geodeticSystemBloc,
+    this.ellipsoidalCoordinatesBloc,
   });
 
   @override
@@ -111,6 +115,8 @@ class _LayoutState extends State<Layout> {
   StreamSubscription<Map<String, dynamic>>? _propertiesSubscription;
   GeodeticSystemBloc? get _gsBloc => widget.geodeticSystemBloc;
   StreamSubscription<GeodeticSystemState>? _gsSubscription;
+  EllipsoidalCoordinatesBloc? get _esBloc => widget.ellipsoidalCoordinatesBloc;
+  StreamSubscription<EllipsoidalCoordinatesState>? _esSubscription;
 
   void _subscribeToProperties(String nodeId) {
     _propertiesSubscription?.cancel();
@@ -139,8 +145,21 @@ class _LayoutState extends State<Layout> {
     bloc.load(_currentView);
   }
 
+  void _subscribeToEllipsoidalSystem() {
+    _esSubscription?.cancel();
+    final bloc = _esBloc;
+    if (bloc == null) return;
+    _esSubscription = bloc.stream.listen((state) {
+      if (mounted) setState(() {});
+    });
+    bloc.load(_currentView);
+  }
+
   bool _isGeodeticKey(String key) =>
       key == 'geodetic-datum' || key == 'coord-accuracy' || key == 'height-accuracy';
+
+  bool _isEllipsoidalKey(String key) =>
+      key == 'latitude' || key == 'longitude' || key == 'height';
 
   @override
   void initState() {
@@ -154,6 +173,7 @@ class _LayoutState extends State<Layout> {
     _expandParents(_currentView);
     _subscribeToProperties(_currentView);
     _subscribeToGeodeticSystem();
+    _subscribeToEllipsoidalSystem();
 
     // Initialize simulated periodic off-thread background worker
     _periodicTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
@@ -172,6 +192,7 @@ class _LayoutState extends State<Layout> {
       _expandParents(_currentView);
       _subscribeToProperties(_currentView);
       _subscribeToGeodeticSystem();
+      _subscribeToEllipsoidalSystem();
     }
     if (widget.themeMode != null && widget.themeMode != oldWidget.themeMode) {
       setState(() {
@@ -184,6 +205,7 @@ class _LayoutState extends State<Layout> {
   void dispose() {
     _propertiesSubscription?.cancel();
     _gsSubscription?.cancel();
+    _esSubscription?.cancel();
     _periodicTimer?.cancel();
     _treeFocusNode.dispose();
     _tableVerticalController.dispose();
@@ -1135,6 +1157,7 @@ class _LayoutState extends State<Layout> {
         dynamicAttributes ?? child.attributes ?? defaultCoordinateAttributes,
       );
       resolvedAttributes.addAll(defaultGeodeticAttributes);
+      resolvedAttributes.addAll(defaultEllipsoidalAttributes);
 
       var initialData = Map<String, dynamic>.from(_currentNodeData ?? {});
       if (!initialData.containsKey('geodetic-datum')) {
@@ -1146,6 +1169,13 @@ class _LayoutState extends State<Layout> {
         initialData['geodetic-datum'] = gs.geodeticDatum;
         if (gs.coordAccuracy != null) initialData['coord-accuracy'] = gs.coordAccuracy;
         if (gs.heightAccuracy != null) initialData['height-accuracy'] = gs.heightAccuracy;
+      }
+      final esBloc = _esBloc;
+      if (esBloc != null && esBloc.state is EllipsoidalCoordinatesLoaded) {
+        final ec = (esBloc.state as EllipsoidalCoordinatesLoaded).coordinates;
+        if (ec.latitude != null) initialData['latitude'] = ec.latitude;
+        if (ec.longitude != null) initialData['longitude'] = ec.longitude;
+        if (ec.height != null) initialData['height'] = ec.height;
       }
 
       return PropertyGrid(
@@ -1173,6 +1203,27 @@ class _LayoutState extends State<Layout> {
               geodeticDatum: datum,
               coordAccuracy: coordAcc,
               heightAccuracy: heightAcc,
+            ));
+            return;
+          }
+          final esBloc = _esBloc;
+          if (esBloc != null && _isEllipsoidalKey(key)) {
+            final currentState = esBloc.state;
+            double? lat;
+            double? lon;
+            double? hgt;
+            if (currentState is EllipsoidalCoordinatesLoaded) {
+              lat = currentState.coordinates.latitude;
+              lon = currentState.coordinates.longitude;
+              hgt = currentState.coordinates.height;
+            }
+            if (key == 'latitude') lat = (value as num).toDouble();
+            else if (key == 'longitude') lon = (value as num).toDouble();
+            else if (key == 'height') hgt = (value as num).toDouble();
+            await esBloc.save(_currentView, EllipsoidalCoordinates(
+              latitude: lat,
+              longitude: lon,
+              height: hgt,
             ));
             return;
           }

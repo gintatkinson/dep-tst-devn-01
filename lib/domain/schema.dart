@@ -38,27 +38,6 @@ class AttributeDefinition {
 
 const List<AttributeDefinition> defaultCoordinateAttributes = [
   AttributeDefinition(
-    key: 'latitude',
-    label: 'Latitude',
-    type: 'double',
-    sectionGroup: 'Location',
-    isRequired: false,
-  ),
-  AttributeDefinition(
-    key: 'longitude',
-    label: 'Longitude',
-    type: 'double',
-    sectionGroup: 'Location',
-    isRequired: false,
-  ),
-  AttributeDefinition(
-    key: 'altitude',
-    label: 'Elevation / Altitude (m)',
-    type: 'int',
-    sectionGroup: 'Location',
-    isRequired: false,
-  ),
-  AttributeDefinition(
     key: 'roomName',
     label: 'Room Identifier',
     type: 'string',
@@ -131,5 +110,26 @@ const List<AttributeDefinition> defaultGeodeticAttributes = [
     type: 'double',
     sectionGroup: 'Location',
     minValue: 0,
+  ),
+];
+
+const List<AttributeDefinition> defaultEllipsoidalAttributes = [
+  AttributeDefinition(
+    key: 'latitude',
+    label: 'Latitude',
+    type: 'double',
+    sectionGroup: 'Location',
+  ),
+  AttributeDefinition(
+    key: 'longitude',
+    label: 'Longitude',
+    type: 'double',
+    sectionGroup: 'Location',
+  ),
+  AttributeDefinition(
+    key: 'height',
+    label: 'Height (m)',
+    type: 'double',
+    sectionGroup: 'Location',
   ),
 ];
