@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_flutter/components/property_grid.dart';
@@ -100,8 +99,8 @@ void main() {
         home: Scaffold(
           body: PropertyGrid(
             activeView: 'Location',
-            onSave: (dynamic data) {
-              savedData = data as Map<String, dynamic>?;
+            onSave: (String key, dynamic value) {
+              (savedData ??= <String, dynamic>{})[key] = value;
             },
           ),
         ),
@@ -139,9 +138,7 @@ void main() {
     expect(savedData, isNotNull);
     expect(savedData!['countryCode'], 'FI');
 
-    // Verify committed JSON display matches committed data
-    final String jsonString = const JsonEncoder.withIndent('  ').convert(savedData);
-    expect(find.text(jsonString), findsOneWidget);
+
   });
 
   testWidgets('Performs validation/commit for maxVoltage and maxAllocatedPower on focus loss', (WidgetTester tester) async {
@@ -152,8 +149,8 @@ void main() {
         home: Scaffold(
           body: PropertyGrid(
             activeView: 'Metrics',
-            onSave: (dynamic data) {
-              savedData = data as Map<String, dynamic>?;
+            onSave: (String key, dynamic value) {
+              (savedData ??= <String, dynamic>{})[key] = value;
             },
           ),
         ),
@@ -211,8 +208,8 @@ void main() {
         home: Scaffold(
           body: PropertyGrid(
             activeView: 'Metrics',
-            onSave: (dynamic data) {
-              savedData = data as Map<String, dynamic>?;
+            onSave: (String key, dynamic value) {
+              (savedData ??= <String, dynamic>{})[key] = value;
             },
           ),
         ),

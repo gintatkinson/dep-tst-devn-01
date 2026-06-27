@@ -20,7 +20,7 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 class PropertyGrid extends StatefulWidget {
   final List<AttributeDefinition>? attributes;
   final Map<String, dynamic> initialValues;
-  final Function? onSave;
+  final void Function(String key, dynamic value)? onSave;
   final String activeView;
 
   const PropertyGrid({
@@ -314,16 +314,7 @@ class _PropertyGridState extends State<PropertyGrid> {
         committedData[key] = finalCastedValue;
       });
 
-      if (widget.onSave != null) {
-        final saveFunc = widget.onSave!;
-        try {
-          (saveFunc as dynamic)(key, finalCastedValue);
-        } catch (_) {
-          try {
-            (saveFunc as dynamic)(committedData);
-          } catch (_) {}
-        }
-      }
+      widget.onSave?.call(key, finalCastedValue);
     }
   }
 
