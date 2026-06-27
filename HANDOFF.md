@@ -14,7 +14,7 @@
 |---|-------|----------|
 | **83** | Eliminate ALL hardcoded data (14 items) | HIGH — next |
 | 84 | UI acceptance tests | MEDIUM |
-| 1-14 | RFC 9179 feature epics | LOW |
+| 1-14 | RFC 9179 feature epics | NOT BUGS — do not process |
 
 ## Issue #83 — Loop Instructions
 Treat each of the 14 items below as ONE pass through Steps 1-7. After Step 7 passes for an item, immediately dispatch Step 1 for the next item. Do NOT stop, report, ask, or plan between items — just keep looping.
@@ -45,7 +45,9 @@ Items:
 All pre-existing (not introduced by this session). Should be fixed or filed before or alongside #83.
 
 ## Protocol
-Use `prompts/debug-agent-prompt.md` — 8-step Recursive Debugging Protocol. Steps 1-7 each dispatch a fresh subagent. Step 8 loops for meta-issues. NEVER execute work directly.
+Use `prompts/debug-agent-prompt.md` — 8-step Recursive Debugging Protocol for **bug issues only**. Steps 1-7 each dispatch a fresh subagent. Step 8 loops for meta-issues. NEVER execute work directly.
+
+**Do NOT process feature requests (#1-#14) with this protocol.** Feature work requires a different approach (design, implementation, testing). Only process bug issues (#83, #84).
 
 ## Karpathy Guidelines
 1. Think before coding — state assumptions
