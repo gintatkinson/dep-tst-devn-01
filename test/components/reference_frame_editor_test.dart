@@ -7,6 +7,7 @@ import 'package:app_flutter/persistence/reference_frame_adapter.dart';
 import 'package:app_flutter/components/reference_frame_editor.dart';
 
 import '../shared/node_id_fixtures.dart';
+import '../shared/body_fixtures.dart';
 
 void main() {
   setUpAll(() {
@@ -45,13 +46,13 @@ void main() {
       await setUpWidget(tester);
 
       expect(find.text('Astronomical Body'), findsOneWidget);
-      expect(find.text('earth'), findsOneWidget);
+      expect(find.text(kTestBodyEarth), findsOneWidget);
     });
 
     testWidgets('saves astronomical-body value and persists it', (WidgetTester tester) async {
       await setUpWidget(tester);
 
-      await tester.enterText(find.byType(TextFormField), 'mars');
+      await tester.enterText(find.byType(TextFormField), kTestBodyMars);
       await tester.pump();
 
       await tester.tap(find.text('Save'));
@@ -62,15 +63,15 @@ void main() {
         () => adapter.fetchReferenceFrame(kTestNodeId),
       );
       expect(saved, isNotNull);
-      expect(saved!.astronomicalBody, 'mars');
+      expect(saved!.astronomicalBody, kTestBodyMars);
     });
 
     testWidgets('shows validation error for invalid astronomical body', (WidgetTester tester) async {
       await setUpWidget(tester);
 
       final TextFormField textField = tester.widget(find.byType(TextFormField));
-      textField.controller!.text = 'caf\u00E9';
-      expect(textField.controller!.text, 'caf\u00E9');
+      textField.controller!.text = kTestBodyNonAscii;
+      expect(textField.controller!.text, kTestBodyNonAscii);
       await tester.pump();
 
       await tester.tap(find.text('Save'));

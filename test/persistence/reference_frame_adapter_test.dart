@@ -4,6 +4,7 @@ import 'package:app_flutter/persistence/reference_frame_adapter.dart';
 import 'package:app_flutter/domain/reference_frame.dart';
 
 import '../shared/node_id_fixtures.dart';
+import '../shared/body_fixtures.dart';
 
 void main() {
   setUpAll(() {
@@ -24,14 +25,14 @@ void main() {
     });
 
     test('saves and reads back a ReferenceFrame', () async {
-      const frame = ReferenceFrame(astronomicalBody: 'moon');
+      const frame = ReferenceFrame(astronomicalBody: kTestBodyMoon);
       await adapter.saveReferenceFrame(kNodeId1, frame);
       final loaded = await adapter.fetchReferenceFrame(kNodeId1);
       expect(loaded, equals(frame));
     });
 
     test('saves and reads back a ReferenceFrame with alternate system', () async {
-      const frame = ReferenceFrame(astronomicalBody: 'mars', alternateSystem: 'sim-env-1');
+      const frame = ReferenceFrame(astronomicalBody: kTestBodyMars, alternateSystem: 'sim-env-1');
       await adapter.saveReferenceFrame(kNodeId2, frame);
       final loaded = await adapter.fetchReferenceFrame(kNodeId2);
       expect(loaded, equals(frame));
@@ -43,8 +44,8 @@ void main() {
     });
 
     test('overwrite: saving twice returns latest value', () async {
-      const first = ReferenceFrame(astronomicalBody: 'earth');
-      const second = ReferenceFrame(astronomicalBody: 'venus');
+      const first = ReferenceFrame(astronomicalBody: kTestBodyEarth);
+      const second = ReferenceFrame(astronomicalBody: kTestBodyVenus);
       await adapter.saveReferenceFrame(kNodeId3, first);
       await adapter.saveReferenceFrame(kNodeId3, second);
       final loaded = await adapter.fetchReferenceFrame(kNodeId3);
