@@ -1,38 +1,48 @@
 ---
 name: debug-protocol
-description: 8-step Recursive Debugging Protocol for systematic bug hunting. Use when fixing bugs to follow a rigorous hypothesis-driven loop with dedicated subagents per step.
+description: 8-step Recursive Debugging Protocol for systematic bug hunting. BUG ISSUES ONLY — do NOT use for features, enhancements, epics, chores, or refactors.
 ---
+
+> **⚠️ THIS PROTOCOL IS FOR BUGS AND DEFECTS ONLY**
+>
+> If the task is a feature request, enhancement, epic, chore, refactor, or new functionality — **DO NOT USE THIS PROTOCOL.** Stop immediately and report back.
+>
+> **Only use this when there is a clear defect:** something is broken, incorrect, or behaving unexpectedly compared to specification.
 
 # Recursive Debugging Protocol
 
-**Scope: BUG ISSUES ONLY.** Do NOT process feature requests, enhancements, or epics with this protocol. If the issue describes new functionality rather than a defect, stop and report back.
+## Step 0 — Verify: Is this a bug?
 
-For EACH numbered step below, you MUST dispatch a NEW subagent to execute that step. Do NOT execute any step yourself. Wait for each subagent to report back before dispatching the next.
+Before starting, confirm:
+- Is there existing behavior that is wrong? (bug)
+- Or is this adding new behavior that doesn't exist yet? (feature)
 
-## Steps
+If feature — **stop.** Do not proceed. Report back that the protocol does not apply.
 
-### Step 1 — Reproduction Subagent
+If bug — proceed to Step 1.
+
+## Step 1 — Reproduction Subagent
 Dispatch a subagent to: Gather complete symptom info, reproduce the bug consistently, determine scope (isolated or systemic), and check environment (version, platform). Return reproduction steps and scope report.
 
-### Step 2 — Hypothesis Subagent
+## Step 2 — Hypothesis Subagent
 Dispatch a subagent to: Generate multiple hypotheses ranked by likelihood. Consider recent changes, data/state issues, race conditions, edge cases, interaction effects. Return a ranked list of hypotheses.
 
-### Step 3 — Investigation Subagent
+## Step 3 — Investigation Subagent
 Dispatch a subagent to: Binary-search the problem space. Add strategic logging at key decision points. Trace data flow from input to output. Verify ALL assumptions — do not assume. Return evidence of what was tried and observed.
 
-### Step 4 — Evidence Subagent
+## Step 4 — Evidence Subagent
 Dispatch a subagent to: Document all evidence, code snippets, logs, error messages, patterns. Track which hypotheses have been ruled out and why. Return a structured evidence dossier.
 
-### Step 5 — Root Cause Subagent
+## Step 5 — Root Cause Subagent
 Dispatch a subagent to: Distinguish root cause from symptoms. Apply "5 whys" to drill to the actual cause. Verify the root cause explains ALL observed symptoms. Return root cause with file:line references.
 
-### Step 6 — Fix Subagent
+## Step 6 — Fix Subagent
 Dispatch a subagent to: Design and implement the minimal fix. Consider side effects. Add regression tests. Document the fix. Update the GitHub issue with root cause and fix details. Return fix summary and issue URL.
 
-### Step 7 — Verification Subagent
+## Step 7 — Verification Subagent
 Dispatch a subagent to: Confirm bug is fixed using original reproduction steps. Test edge cases. Verify no regressions (`flutter test` must pass). Return pass/fail result.
 
-### Step 8 — Loop Decision
+## Step 8 — Loop Decision
 If Step 7 failed, return to Step 1. Do NOT give up after one or two failed hypotheses. If stuck, reconsider assumptions.
 
 If the issue is a meta-issue with multiple independent sub-items (e.g. "eliminate all hardcoded data" with 14 items), treat each sub-item as one pass through Steps 1-7. After Step 7 passes for the current sub-item, return to Step 1 for the next sub-item. Do NOT stop to ask, report, or plan — just loop.
@@ -44,6 +54,7 @@ If the issue is a meta-issue with multiple independent sub-items (e.g. "eliminat
 - If a subagent fails to complete its step, dispatch another with more specific instructions
 
 ## Debugging Checklist
+- [ ] Step 0: Confirmed this is a bug (not a feature)
 - [ ] Step 1 subagent dispatched and reported
 - [ ] Step 2 subagent dispatched and reported
 - [ ] Step 3 subagent dispatched and reported
