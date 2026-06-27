@@ -2,17 +2,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:app_flutter/domain/ellipsoidal_coordinates.dart';
 import 'package:app_flutter/domain/ellipsoidal_coordinates_validation.dart';
 
+import '../shared/coordinate_fixtures.dart';
+
 void main() {
   group('validateEllipsoidalCoordinates', () {
     test('valid lat/lon accepted', () {
-      const coords = EllipsoidalCoordinates(latitude: 40.73297, longitude: -74.007696);
+      const coords = EllipsoidalCoordinates(latitude: kTestLatitude, longitude: kTestLongitude);
       final result = validateEllipsoidalCoordinates(coords);
       expect(result.isValid, isTrue);
       expect(result.error, isNull);
     });
 
     test('valid lat/lon/height accepted', () {
-      const coords = EllipsoidalCoordinates(latitude: 40.73297, longitude: -74.007696, height: 35.0);
+      const coords = EllipsoidalCoordinates(latitude: kTestLatitude, longitude: kTestLongitude, height: kTestHeight);
       final result = validateEllipsoidalCoordinates(coords);
       expect(result.isValid, isTrue);
     });

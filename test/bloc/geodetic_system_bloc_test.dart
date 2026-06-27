@@ -4,6 +4,8 @@ import 'package:app_flutter/bloc/geodetic_system_bloc.dart';
 import 'package:app_flutter/domain/geodetic_system.dart';
 import 'package:app_flutter/persistence/geodetic_system_adapter.dart';
 
+import '../shared/node_id_fixtures.dart';
+
 void main() {
   setUpAll(() {
     sqfliteFfiInit();
@@ -38,21 +40,21 @@ void main() {
           isA<GeodeticSystemLoaded>(),
         ]),
       );
-      bloc.load('node-1');
+      bloc.load(kNodeId1);
       await future;
       expect((bloc.state as GeodeticSystemLoaded).system.geodeticDatum, 'wgs-84');
     });
 
     test('save persists and emits GeodeticSystemLoaded with saved system', () async {
       const system = GeodeticSystem(geodeticDatum: 'itrf-2020');
-      await bloc.save('node-2', system);
+      await bloc.save(kNodeId2, system);
       expect(bloc.state, isA<GeodeticSystemLoaded>());
       expect((bloc.state as GeodeticSystemLoaded).system.geodeticDatum, 'itrf-2020');
     });
 
     test('load after save returns previously persisted frame', () async {
       const system = GeodeticSystem(geodeticDatum: 'nad-83');
-      await adapter.saveGeodeticSystem('node-3', system);
+      await adapter.saveGeodeticSystem(kNodeId3, system);
       final future = expectLater(
         bloc.stream,
         emitsInOrder([
@@ -60,21 +62,21 @@ void main() {
           isA<GeodeticSystemLoaded>(),
         ]),
       );
-      bloc.load('node-3');
+      bloc.load(kNodeId3);
       await future;
       expect((bloc.state as GeodeticSystemLoaded).system.geodeticDatum, 'nad-83');
     });
 
     test('save with negative accuracy emits GeodeticSystemError without persisting', () async {
       const system = GeodeticSystem(geodeticDatum: 'wgs-84', coordAccuracy: -1);
-      await bloc.save('node-4', system);
+      await bloc.save(kNodeId4, system);
       expect(bloc.state, isA<GeodeticSystemError>());
       expect((bloc.state as GeodeticSystemError).message, contains('non-negative'));
     });
 
     test('save with height-accuracy and Cartesian emits GeodeticSystemError without persisting', () async {
       const system = GeodeticSystem(geodeticDatum: 'wgs-84', heightAccuracy: 1.0);
-      await bloc.save('node-5', system, isCartesian: true);
+      await bloc.save(kNodeId5, system, isCartesian: true);
       expect(bloc.state, isA<GeodeticSystemError>());
       expect((bloc.state as GeodeticSystemError).message, contains('height-accuracy'));
     });
@@ -92,14 +94,14 @@ void main() {
           isA<GeodeticSystemLoaded>(),
         ]),
       );
-      bloc.load('node-missing');
+      bloc.load(kNodeIdMissing);
       await future;
       expect(bloc.state, isA<GeodeticSystemLoaded>());
     });
 
     test('stream emits Loading then Loaded on successful load', () async {
       const system = GeodeticSystem(geodeticDatum: 'itrf-2020');
-      await adapter.saveGeodeticSystem('stream-test', system);
+      await adapter.saveGeodeticSystem(kNodeIdStreamTest, system);
       final future = expectLater(
         bloc.stream,
         emitsInOrder([
@@ -107,7 +109,7 @@ void main() {
           isA<GeodeticSystemLoaded>(),
         ]),
       );
-      bloc.load('stream-test');
+      bloc.load(kNodeIdStreamTest);
       await future;
     });
   });

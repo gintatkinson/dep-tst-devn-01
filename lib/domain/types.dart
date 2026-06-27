@@ -1,3 +1,5 @@
+export 'cartesian_coordinate.dart';
+
 class Velocity {
   final double vNorth;
   final double vEast;

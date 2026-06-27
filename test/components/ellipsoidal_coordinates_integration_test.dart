@@ -10,6 +10,8 @@ import 'package:app_flutter/domain/ellipsoidal_coordinates.dart';
 import 'package:app_flutter/components/layout.dart';
 import 'package:app_flutter/components/property_grid.dart';
 
+import '../shared/coordinate_fixtures.dart';
+
 class _NoopRepository implements AbstractRepository {
   @override
   Future<Map<String, dynamic>> fetchProperties(String nodeId) async => {};
@@ -123,7 +125,7 @@ void main() {
       );
       expect(latField, findsOneWidget);
 
-      await tester.enterText(latField.first, '40.73297');
+      await tester.enterText(latField.first, kTestLatitude.toString());
       await tester.pump();
 
       tester.binding.focusManager.primaryFocus?.unfocus();
@@ -138,7 +140,7 @@ void main() {
         () => adapter.fetchEllipsoidalCoordinates('Location'),
       );
       expect(saved, isNotNull);
-      expect(saved!.latitude, 40.73297);
+      expect(saved!.latitude, kTestLatitude);
     });
   });
 }

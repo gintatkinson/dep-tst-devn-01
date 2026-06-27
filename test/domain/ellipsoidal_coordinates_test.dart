@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_flutter/domain/ellipsoidal_coordinates.dart';
 
+import '../shared/coordinate_fixtures.dart';
+
 void main() {
   group('EllipsoidalCoordinates', () {
     test('default constructor sets all fields to null', () {
@@ -11,37 +13,37 @@ void main() {
     });
 
     test('named constructor with lat/lon', () {
-      const coords = EllipsoidalCoordinates(latitude: 40.73297, longitude: -74.007696);
-      expect(coords.latitude, 40.73297);
-      expect(coords.longitude, -74.007696);
+      const coords = EllipsoidalCoordinates(latitude: kTestLatitude, longitude: kTestLongitude);
+      expect(coords.latitude, kTestLatitude);
+      expect(coords.longitude, kTestLongitude);
       expect(coords.height, isNull);
     });
 
     test('constructor with all fields', () {
       const coords = EllipsoidalCoordinates(
-        latitude: 40.73297,
-        longitude: -74.007696,
-        height: 35.0,
+        latitude: kTestLatitude,
+        longitude: kTestLongitude,
+        height: kTestHeight,
       );
-      expect(coords.latitude, 40.73297);
-      expect(coords.longitude, -74.007696);
-      expect(coords.height, 35.0);
+      expect(coords.latitude, kTestLatitude);
+      expect(coords.longitude, kTestLongitude);
+      expect(coords.height, kTestHeight);
     });
 
     test('fromJson round-trip', () {
       final json = {
-        'latitude': 40.73297,
-        'longitude': -74.007696,
-        'height': 35.0,
+        'latitude': kTestLatitude,
+        'longitude': kTestLongitude,
+        'height': kTestHeight,
       };
       final coords = EllipsoidalCoordinates.fromJson(json);
-      expect(coords.latitude, 40.73297);
-      expect(coords.longitude, -74.007696);
-      expect(coords.height, 35.0);
+      expect(coords.latitude, kTestLatitude);
+      expect(coords.longitude, kTestLongitude);
+      expect(coords.height, kTestHeight);
       final output = coords.toJson();
-      expect(output['latitude'], 40.73297);
-      expect(output['longitude'], -74.007696);
-      expect(output['height'], 35.0);
+      expect(output['latitude'], kTestLatitude);
+      expect(output['longitude'], kTestLongitude);
+      expect(output['height'], kTestHeight);
     });
 
     test('fromJson with missing fields uses null', () {

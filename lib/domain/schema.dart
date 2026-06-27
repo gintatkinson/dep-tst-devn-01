@@ -133,3 +133,24 @@ const List<AttributeDefinition> defaultEllipsoidalAttributes = [
     sectionGroup: 'Location',
   ),
 ];
+
+const List<AttributeDefinition> defaultCartesianAttributes = [
+  AttributeDefinition(
+    key: 'x',
+    label: 'X (m)',
+    type: 'double',
+    sectionGroup: 'Cartesian',
+  ),
+  AttributeDefinition(
+    key: 'y',
+    label: 'Y (m)',
+    type: 'double',
+    sectionGroup: 'Cartesian',
+  ),
+  AttributeDefinition(
+    key: 'z',
+    label: 'Z (m)',
+    type: 'double',
+    sectionGroup: 'Cartesian',
+  ),
+];

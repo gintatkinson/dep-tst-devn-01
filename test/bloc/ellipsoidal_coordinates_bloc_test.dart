@@ -4,6 +4,9 @@ import 'package:app_flutter/bloc/ellipsoidal_coordinates_bloc.dart';
 import 'package:app_flutter/domain/ellipsoidal_coordinates.dart';
 import 'package:app_flutter/persistence/ellipsoidal_coordinates_adapter.dart';
 
+import '../shared/coordinate_fixtures.dart';
+import '../shared/node_id_fixtures.dart';
+
 void main() {
   setUpAll(() {
     sqfliteFfiInit();
@@ -38,13 +41,13 @@ void main() {
           isA<EllipsoidalCoordinatesLoaded>(),
         ]),
       );
-      bloc.load('node-1');
+      bloc.load(kNodeId1);
       await future;
       expect((bloc.state as EllipsoidalCoordinatesLoaded).coordinates, isNotNull);
     });
 
     test('load without stored data emits Loaded with empty coordinates', () async {
-      bloc.load('no-such-node');
+      bloc.load(kNodeIdNoSuch);
       await Future<void>.delayed(const Duration(milliseconds: 50));
       expect(bloc.state, isA<EllipsoidalCoordinatesLoaded>());
       final loaded = bloc.state as EllipsoidalCoordinatesLoaded;
@@ -53,7 +56,7 @@ void main() {
     });
 
     test('save persists and emits Loaded', () async {
-      const coords = EllipsoidalCoordinates(latitude: 40.73297, longitude: -74.007696);
+      const coords = EllipsoidalCoordinates(latitude: kTestLatitude, longitude: kTestLongitude);
       final future = expectLater(
         bloc.stream,
         emitsInOrder([
@@ -61,11 +64,11 @@ void main() {
           isA<EllipsoidalCoordinatesLoaded>(),
         ]),
       );
-      await bloc.save('node-2', coords);
+      await bloc.save(kNodeId2, coords);
       await future;
       expect(
         (bloc.state as EllipsoidalCoordinatesLoaded).coordinates.latitude,
-        40.73297,
+        kTestLatitude,
       );
     });
 
@@ -75,15 +78,15 @@ void main() {
         longitude: 0.0,
         height: 0.1234567, // 7 fraction digits
       );
-      await bloc.save('node-3', coords);
+      await bloc.save(kNodeId3, coords);
       expect(bloc.state, isA<EllipsoidalCoordinatesError>());
       expect((bloc.state as EllipsoidalCoordinatesError).message, contains('height'));
     });
 
     test('load after save returns persisted coordinates', () async {
       const coords = EllipsoidalCoordinates(latitude: 10.0, longitude: 20.0);
-      await adapter.saveEllipsoidalCoordinates('node-4', coords);
-      bloc.load('node-4');
+      await adapter.saveEllipsoidalCoordinates(kNodeId4, coords);
+      bloc.load(kNodeId4);
       await Future<void>.delayed(const Duration(milliseconds: 50));
       expect((bloc.state as EllipsoidalCoordinatesLoaded).coordinates, equals(coords));
     });

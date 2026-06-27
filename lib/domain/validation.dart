@@ -1,4 +1,6 @@
 import 'types.dart';
+import 'cartesian_coordinate.dart';
+export 'cartesian_coordinate_validation.dart';
 
 /// Validates a TemporalContext.
 /// Property coverage: timestamp, validUntil, velocity
