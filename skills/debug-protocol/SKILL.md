@@ -37,15 +37,18 @@ Dispatch a subagent to: Document all evidence, code snippets, logs, error messag
 Dispatch a subagent to: Distinguish root cause from symptoms. Apply "5 whys" to drill to the actual cause. Verify the root cause explains ALL observed symptoms. Return root cause with file:line references.
 
 ## Step 6 — Fix Subagent
-Dispatch a subagent to: Design and implement the minimal fix. Consider side effects. Add regression tests. Document the fix. Update the GitHub issue with root cause and fix details. Return fix summary and issue URL.
+Dispatch a subagent to: Design and implement the minimal fix. Consider side effects. Add regression tests. Document the fix. Commit and push the fix code to the remote repository. Update the GitHub issue with root cause, fix details, and commit hash. Return fix summary, commit hash, and issue URL.
 
 ## Step 7 — Verification Subagent
-Dispatch a subagent to: Confirm bug is fixed using original reproduction steps. Test edge cases. Verify no regressions (`flutter test` must pass). Return pass/fail result.
+Dispatch a subagent to: Confirm bug is fixed using original reproduction steps. Test edge cases. Verify no regressions (project test suite must pass). Return pass/fail result.
+
+## Step 7b — Close & Commit
+If Step 7 passed: Close the GitHub issue with a comment referencing the commit hash. Commit and push the closure update (e.g., updated HANDOFF.md, issue checklist, or any metadata files). Return closure confirmation.
 
 ## Step 8 — Loop Decision
 If Step 7 failed, return to Step 1. Do NOT give up after one or two failed hypotheses. If stuck, reconsider assumptions.
 
-If the issue is a meta-issue with multiple independent sub-items (e.g. "eliminate all hardcoded data" with 14 items), treat each sub-item as one pass through Steps 1-7. After Step 7 passes for the current sub-item, return to Step 1 for the next sub-item. Do NOT stop to ask, report, or plan — just loop.
+If the issue is a meta-issue with multiple independent sub-items (e.g. "eliminate all hardcoded data" with 14 items), treat each sub-item as one pass through Steps 1-7b. After Step 7b passes for the current sub-item, return to Step 1 for the next sub-item. Do NOT stop to ask, report, or plan — just loop.
 
 ## Persistence Rules
 - Each step MUST use a fresh subagent — do not reuse or combine
