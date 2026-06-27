@@ -16,8 +16,10 @@
 | 84 | UI acceptance tests | MEDIUM |
 | 1-14 | RFC 9179 feature epics | LOW |
 
-## Issue #83 — What's needed
-Externalize 14 hardcoded data items to DB/config. Items:
+## Issue #83 — Loop Instructions
+Treat each of the 14 items below as ONE pass through Steps 1-7. After Step 7 passes for an item, immediately dispatch Step 1 for the next item. Do NOT stop, report, ask, or plan between items — just keep looping.
+
+Items:
 1. Mock table data (Items/Status/Activity) → JSON or DB
 2. Tab labels → config
 3. Tree navigation data → JSON or DB
