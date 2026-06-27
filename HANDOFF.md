@@ -21,7 +21,7 @@ These block testing. The next agent should file them as issues or fix them befor
 ## Execution Plan
 
 1. Load `skills/debug-protocol/SKILL.md`
-2. Step 0: Confirm #83 is a bug (it is — hardcoded data is a defect vs "data from DB" requirement)
-3. Execute Steps 1-7 per sub-item, looping without stopping until all 14 are done
-4. Repeat for #84
-5. Close issues as completed
+2. Step 0: Confirm the issue is a bug before proceeding
+3. Execute Steps 1-7 per sub-item on **all open bug issues**, looping without stopping until ALL are closed
+4. Subagents may file new issues during execution — those must also be processed
+5. Do NOT stop until ZERO open bugs remain
