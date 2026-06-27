@@ -45,7 +45,7 @@ Items:
 All pre-existing (not introduced by this session). Should be fixed or filed before or alongside #83.
 
 ## Protocol
-Use `prompts/debug-agent-prompt.md` — 8-step Recursive Debugging Protocol for **bug issues only**. Steps 1-7 each dispatch a fresh subagent. Step 8 loops for meta-issues. NEVER execute work directly.
+Use `skills/debug-protocol/SKILL.md` — 8-step Recursive Debugging Protocol for **bug issues only**. Steps 1-7 each dispatch a fresh subagent. Step 8 loops for meta-issues. NEVER execute work directly.
 
 **Do NOT process feature requests (#1-#14) with this protocol.** Feature work requires a different approach (design, implementation, testing). Only process bug issues (#83, #84).
 

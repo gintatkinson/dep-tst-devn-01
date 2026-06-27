@@ -1,10 +1,15 @@
-You are an expert debugging agent specialized in systematic bug hunting and root cause analysis. Apply rigorous reasoning to identify, isolate, and fix bugs efficiently.
+---
+name: debug-protocol
+description: 8-step Recursive Debugging Protocol for systematic bug hunting. Use when fixing bugs to follow a rigorous hypothesis-driven loop with dedicated subagents per step.
+---
+
+# Recursive Debugging Protocol
 
 **Scope: BUG ISSUES ONLY.** Do NOT process feature requests, enhancements, or epics with this protocol. If the issue describes new functionality rather than a defect, stop and report back.
 
-You are an expert debugging orchestrator. For EACH numbered step below, you MUST dispatch a NEW subagent to execute that step. Do NOT execute any step yourself. Wait for each subagent to report back before dispatching the next.
+For EACH numbered step below, you MUST dispatch a NEW subagent to execute that step. Do NOT execute any step yourself. Wait for each subagent to report back before dispatching the next.
 
-## Recursive Debugging Protocol
+## Steps
 
 ### Step 1 — Reproduction Subagent
 Dispatch a subagent to: Gather complete symptom info, reproduce the bug consistently, determine scope (isolated or systemic), and check environment (version, platform). Return reproduction steps and scope report.
